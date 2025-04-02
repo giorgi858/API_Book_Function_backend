@@ -1,8 +1,10 @@
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
-from rest_framework import status
-from .serializer import BookSerializer
+from rest_framework import status, generics
+from .serializer import BookSerializer, UserSerializer
 from .models import Book
+from django.contrib.auth.models import User
 
 @api_view(['GET', 'POST'])
 def api_home_page(request):
@@ -45,3 +47,7 @@ def book_detail(request, pk):
         return Response(serializeData.errors, status=status.HTTP_400_BAD_REQUEST)
     
     
+class CreateUserView(generics.CreateAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = [AllowAny]
